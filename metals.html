@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chennai Gold Predictor (Final Corrected)</title>
+    <title>Chennai Gold Predictor (Final PRO)</title>
     <style>
         :root { --gold: #D4AF37; --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); padding: 15px; display: flex; justify-content: center; }
@@ -31,8 +31,8 @@
 
 <div class="wrapper">
     <div class="header">
-        <h2 style="margin:0">GOLD PREDICTOR</h2>
-        <p style="margin:5px 0 0; font-size: 0.85em; opacity: 0.8;">Metals.dev Real-Time Engine</p>
+        <h2 style="margin:0">CHENNAI GOLD PREDICTOR</h2>
+        <p style="margin:5px 0 0; font-size: 0.85em; opacity: 0.8;">Metals.dev Precision Data</p>
     </div>
 
     <div class="content">
@@ -64,7 +64,7 @@
             <div class="res-card"><span class="res-label">22K (8g)</span><div id="v4" class="res-val">--</div></div>
         </div>
 
-        <div id="status" class="status">Waiting for data...</div>
+        <div id="status" class="status">Click button to update...</div>
 
         <div class="timing">
             <strong>⏰ ACCURACY TIMES:</strong><br>
@@ -81,17 +81,22 @@
         
         status.innerText = "Connecting to market servers...";
         try {
-            // Updated URL: We remove currency=USD to let it default correctly for XAU/USD
-            const url = `https://api.metals.dev/v1/latest?api_key=${key}`;
+            // Using USD as the target to get the global spot price
+            const url = `https://api.metals.dev/v1/latest?api_key=${key}&currency=USD&unit=toz`;
             const resp = await fetch(url);
             const data = await resp.json();
             
             if(data.status === "success") {
-                // Pull global gold price in USD/oz
+                // Correctly pull global gold price in USD/oz
                 const goldUSD = data.metals.gold; 
                 
-                // On a standard USD request, Metals.dev returns 1 USD = X INR
-                const inrRate = data.currencies.INR;
+                // FIXED: Logic to handle inverted exchange rates (the 0.01 issue)
+                let inrRate = data.currencies.INR;
+                
+                if (inrRate < 1) {
+                    // Flipping the reciprocal (1 / 0.01 = 100)
+                    inrRate = 1 / inrRate; 
+                }
 
                 document.getElementById('gold').value = goldUSD.toFixed(2);
                 document.getElementById('inr').value = inrRate.toFixed(2);
@@ -99,7 +104,7 @@
                 runCalc();
                 status.innerHTML = "✅ Updated: " + new Date().toLocaleTimeString();
             } else {
-                status.innerText = "❌ API Error. Check if your limit is reached.";
+                status.innerText = "❌ API Error. Limit likely reached.";
             }
         } catch (e) {
             status.innerText = "❌ Connection failed. Check manual links.";
@@ -111,7 +116,7 @@
         const r = parseFloat(document.getElementById('inr').value);
         if(!g || !r) return;
 
-        // Formula: (Global / 31.1035 * INR) * 1.06 (Duty) * 1.03 (GST)
+        // Formula: (Global / 31.1035 * INR) * 1.06 (Custom Duty) * 1.03 (GST)
         const p24 = (g / 31.1035) * r * 1.06 * 1.03; 
         const p22 = p24 * (22/24);
         
