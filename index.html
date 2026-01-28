@@ -5,80 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chennai Gold Predictor</title>
     <style>
-        :root { --gold: #D4AF37; --dark-bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--dark-bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 500px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); overflow: hidden; }
-        .header { background: var(--gold); padding: 25px; text-align: center; color: #000; }
-        .data-sources { background: #2a2a2a; padding: 15px; text-align: center; border-bottom: 1px solid #3d3d3d; }
-        .data-sources a { color: var(--gold); text-decoration: none; font-weight: bold; margin: 0 10px; font-size: 0.9em; border-bottom: 1px dashed var(--gold); }
-        .content { padding: 25px; }
-        .input-box { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 0.85em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #3d3d3d; border-radius: 8px; color: #fff; font-size: 1.1em; box-sizing: border-box; }
-        button { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 8px; color: #000; font-weight: 800; font-size: 1em; cursor: pointer; transition: 0.2s; }
-        button:hover { opacity: 0.9; transform: scale(0.98); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .card { background: #2a2a2a; padding: 15px; border-radius: 10px; border-top: 3px solid var(--gold); }
-        .card-label { font-size: 0.75em; color: #aaa; display: block; }
-        .card-val { font-size: 1.2em; font-weight: bold; margin-top: 5px; color: #fff; }
-        .time-guide { margin-top: 25px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; border: 1px solid var(--gold); font-size: 0.85em; }
+        :root { --gold: #D4AF37; --dark: #121212; --card: #1e1e1e; --text: #ffffff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--dark); color: var(--text); padding: 15px; display: flex; justify-content: center; }
+        .wrapper { width: 100%; max-width: 480px; background: var(--card); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; border: 1px solid #333; }
+        .header { background: var(--gold); padding: 20px; text-align: center; color: #000; }
+        .nav-links { background: #252525; padding: 12px; display: flex; justify-content: space-around; border-bottom: 1px solid #333; }
+        .nav-links a { color: var(--gold); text-decoration: none; font-size: 0.85em; font-weight: bold; border: 1px solid var(--gold); padding: 5px 10px; border-radius: 5px; transition: 0.3s; }
+        .nav-links a:hover { background: var(--gold); color: #000; }
+        .content { padding: 20px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.75em; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 1.1em; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px; font-size: 1em; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .res-card { background: #252525; padding: 12px; border-radius: 10px; border-left: 4px solid var(--gold); }
+        .res-label { font-size: 0.7em; color: #aaa; display: block; }
+        .res-val { font-size: 1.1em; font-weight: bold; margin-top: 3px; }
+        .timing { margin-top: 20px; padding: 12px; background: #252525; border-radius: 8px; font-size: 0.8em; line-height: 1.5; color: #bbb; border: 1px solid #333; }
+        .timing b { color: var(--gold); }
     </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="wrapper">
     <div class="header">
-        <h2 style="margin:0">GOLD PREDICTOR</h2>
-        <p style="margin:5px 0 0; opacity:0.8">Chennai Market Outlook</p>
+        <h2 style="margin:0">CHENNAI GOLD PREDICTOR</h2>
+        <p style="margin:5px 0 0; font-size: 0.8em; font-weight: bold;">Predict Tomorrow's Opening Rate</p>
     </div>
 
-    <div class="data-sources">
-        <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank">1. Live Gold Chart</a>
-        <a href="https://www.google.com/finance/quote/USD-INR" target="_blank">2. USD/INR Rate</a>
+    <div class="nav-links">
+        <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank">📈 LIVE GOLD CHART</a>
+        <a href="https://www.google.com/finance/quote/USD-INR" target="_blank">💵 USD/INR RATE</a>
     </div>
 
     <div class="content">
-        <div class="input-box">
+        <div class="input-group">
             <label>Global Gold (USD/oz)</label>
-            <input type="number" id="globalPrice" value="5284.86" step="0.01">
+            <input type="number" id="gold" value="5284.86" step="0.01">
         </div>
-        <div class="input-box">
+        <div class="input-group">
             <label>USD to INR Rate</label>
-            <input type="number" id="usdInr" value="92.11" step="0.01">
+            <input type="number" id="inr" value="92.11" step="0.01">
         </div>
 
-        <button onclick="calc()">CALCULATE PREDICTION</button>
+        <button onclick="run()">CALCULATE NOW</button>
 
         <div class="grid">
-            <div class="card"><span class="card-label">24K (1g)</span><div id="24k1" class="card-val">--</div></div>
-            <div class="card"><span class="card-label">24K (8g)</span><div id="24k8" class="card-val">--</div></div>
-            <div class="card"><span class="card-label">22K (1g)</span><div id="22k1" class="card-val">--</div></div>
-            <div class="card"><span class="card-label">22K (8g)</span><div id="22k8" class="card-val">--</div></div>
+            <div class="res-card"><span class="res-label">24K (1g)</span><div id="v1" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">24K (8g)</span><div id="v2" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-card"><span class="res-label">22K (1g)</span><div id="v3" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">22K (8g)</span><div id="v4" class="res-val">--</div></div>
         </div>
 
-        <div class="time-guide">
-            <strong>⏰ Accuracy Checkpoints:</strong><br>
-            • <b>11:45 PM IST:</b> Best for overnight forecast.<br>
-            • <b>8:45 AM IST:</b> Final check before market open.
+        <div class="timing">
+            <strong>⏰ ACCURACY TIMES:</strong><br>
+            • Check at <b>11:45 PM IST</b> (After MCX Closes)<br>
+            • Check at <b>08:45 AM IST</b> (Before Chennai Opens)
         </div>
     </div>
 </div>
 
 <script>
-    function calc() {
-        const global = parseFloat(document.getElementById('globalPrice').value);
-        const inr = parseFloat(document.getElementById('usdInr').value);
-        
-        // Formula: (Global / 31.1035 * INR) * 1.06 (Import Duty) * 1.03 (GST)
-        const base24K = (global / 31.1035) * inr * 1.06 * 1.03;
-        const base22K = base24K * (22/24);
-
-        const format = (val) => "₹" + Math.round(val).toLocaleString('en-IN');
-
-        document.getElementById('24k1').innerText = format(base24K);
-        document.getElementById('24k8').innerText = format(base24K * 8);
-        document.getElementById('22k1').innerText = format(base22K);
-        document.getElementById('22k8').innerText = format(base22K * 8);
+    function run() {
+        const g = parseFloat(document.getElementById('gold').value);
+        const r = parseFloat(document.getElementById('inr').value);
+        const p24 = (g / 31.1035) * r * 1.06 * 1.03; // Duty(6%) + GST(3%)
+        const p22 = p24 * (22/24);
+        const f = (n) => "₹" + Math.round(n).toLocaleString('en-IN');
+        document.getElementById('v1').innerText = f(p24);
+        document.getElementById('v2').innerText = f(p24 * 8);
+        document.getElementById('v3').innerText = f(p22);
+        document.getElementById('v4').innerText = f(p22 * 8);
     }
 </script>
 
