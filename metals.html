@@ -1,148 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Gold Today vs Tomorrow</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 20px;
-    }
-    .card {
-      max-width: 420px;
-      margin: auto;
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.1);
-    }
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
-      font-size: 15px;
-    }
-    .result {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-    }
-    .up { color: green; }
-    .down { color: red; }
-    .note {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #666;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chennai Gold Predictor PRO</title>
+    <style>
+        :root { --gold: #D4AF37; --bg: #121212; --card: #1e1e1e; --text: #ffffff; --red: #ff4d4d; --green: #4dff88; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); padding: 15px; display: flex; justify-content: center; }
+        .wrapper { width: 100%; max-width: 450px; background: var(--card); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; overflow: hidden; }
+        .header { background: var(--gold); padding: 25px; text-align: center; color: #000; }
+        .header h2 { margin: 0; letter-spacing: 1px; }
+        .content { padding: 20px; }
+        .source-links { display: flex; gap: 10px; margin-bottom: 20px; }
+        .source-btn { flex: 1; padding: 8px; font-size: 0.75em; text-align: center; border: 1px solid #444; border-radius: 5px; color: var(--gold); text-decoration: none; font-weight: bold; background: #252525; }
+        .input-group { margin-bottom: 15px; position: relative; }
+        label { display: block; font-size: 0.7em; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #3d3d3d; border-radius: 8px; color: white; font-size: 1.1em; box-sizing: border-box; }
+        .btn-group { display: flex; gap: 10px; margin: 20px 0; }
+        .btn-main { flex: 2; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000; }
+        .btn-sub { flex: 1; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 8px; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+        .res-card { background: #252525; padding: 15px; border-radius: 12px; border-left: 4px solid var(--gold); }
+        .res-label { font-size: 0.7em; color: #aaa; display: block; }
+        .res-val { font-size: 1.3em; font-weight: bold; margin-top: 5px; }
+        .trend-box { background: #252525; padding: 15px; border-radius: 12px; margin-top: 20px; border: 1px solid #333; }
+        .trend-title { font-size: 0.75em; color: #888; margin-bottom: 10px; display: block; }
+        .trend-indicator { display: flex; align-items: center; gap: 10px; font-size: 1.5em; font-weight: bold; }
+        .down { color: var(--red); }
+        .up { color: var(--green); }
+        .status { font-size: 0.75em; text-align: center; margin-top: 15px; color: #aaa; }
+        .timing { margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.05); border-radius: 10px; font-size: 0.8em; border: 1px solid #333; }
+        .timing b { color: var(--gold); }
+    </style>
 </head>
 <body>
 
-<div class="card" id="goldCard">
-  <div class="title">Loading...</div>
+<div class="wrapper">
+    <div class="header">
+        <h2>GOLD PREDICTOR</h2>
+        <p style="margin:5px 0 0; opacity: 0.8; font-size: 0.8em;">Metals.dev Precision Reference</p>
+    </div>
+
+    <div class="content">
+        <div class="source-links">
+            <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank" class="source-btn">📈 SOURCE CHART</a>
+            <a href="https://www.google.com/finance/quote/USD-INR" target="_blank" class="source-btn">💵 SOURCE INR</a>
+        </div>
+
+        <input type="hidden" id="apiKey" value="QPVMXLS7RX51HTMA34LI843MA34LI">
+
+        <div class="input-group">
+            <label>Global Gold (USD/oz)</label>
+            <input type="number" id="gold" step="0.01" value="5323.49">
+        </div>
+        <div class="input-group">
+            <label>USD → INR Rate</label>
+            <input type="number" id="inr" step="0.01" value="92.13">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-main" onclick="fetchData()">⚡ AUTO FETCH</button>
+            <button class="btn-sub" onclick="runCalc()">CALCULATE</button>
+        </div>
+
+        <div class="grid">
+            <div class="res-card"><span class="res-label">24K – 1g</span><div id="v24_1" class="res-val">₹0</div></div>
+            <div class="res-card"><span class="res-label">24K – 8g</span><div id="v24_8" class="res-val">₹0</div></div>
+            <div class="res-card"><span class="res-label">22K – 1g ⭐</span><div id="v22_1" class="res-val">₹0</div></div>
+            <div class="res-card"><span class="res-label">22K – 8g</span><div id="v22_8" class="res-val">₹0</div></div>
+        </div>
+
+        <div class="trend-box">
+            <span class="trend-title">Today vs Tomorrow (22K – 1g)</span>
+            <div id="trend" class="trend-indicator down">
+                ▼ Down <span id="trendVal">₹0</span>
+            </div>
+            <p style="margin:5px 0 0; font-size: 0.7em; color: #666;">Indicative trend based on global movement</p>
+        </div>
+
+        <div id="status" class="status">✅ Updated: 11:55:34 PM</div>
+
+        <div class="timing">
+            <strong>Best Accuracy Times</strong><br>
+            • 11:45 PM IST (After MCX Close)<br>
+            • 08:45 AM IST (Before Chennai Market Opens)
+        </div>
+    </div>
 </div>
 
 <script>
-const API_KEY = "YOUR_METALS_DEV_API_KEY";
-const BASE_URL = "https://api.metals.dev/v1";
+    // Placeholder for "Today's" actual market price to calculate the trend
+    // In a real app, you would fetch yesterday's close price here
+    const PREVIOUS_CLOSE_22K = 15685; 
 
-async function fetchLatestGold() {
-  const res = await fetch(`${BASE_URL}/latest?api_key=${API_KEY}&symbols=XAU`);
-  const data = await res.json();
-  return data.rates.XAU;
-}
+    async function fetchData() {
+        const key = document.getElementById('apiKey').value;
+        const status = document.getElementById('status');
+        status.innerText = "🔄 Syncing live data...";
+        try {
+            const url = `https://api.metals.dev/v1/latest?api_key=${key}&currency=USD&unit=toz`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if(data.status === "success") {
+                const goldUSD = data.metals.gold;
+                let inrRate = data.currencies.INR;
+                if (inrRate < 1) inrRate = 1 / inrRate; 
 
-async function fetchHistoricalGold(date) {
-  const res = await fetch(
-    `${BASE_URL}/historical?api_key=${API_KEY}&symbols=XAU&date=${date}`
-  );
-  const data = await res.json();
-  return data.rates.XAU;
-}
+                document.getElementById('gold').value = goldUSD.toFixed(2);
+                document.getElementById('inr').value = inrRate.toFixed(2);
+                runCalc();
+                status.innerHTML = "✅ Updated: " + new Date().toLocaleTimeString();
+            }
+        } catch (e) { status.innerText = "❌ Error fetching data."; }
+    }
 
-function formatDate(d) {
-  return d.toISOString().split("T")[0];
-}
+    function runCalc() {
+        const g = parseFloat(document.getElementById('gold').value);
+        const r = parseFloat(document.getElementById('inr').value);
+        if(!g || !r) return;
 
-async function buildCard() {
-  const now = new Date();
-  const minutes = now.getHours() * 60 + now.getMinutes();
-  const card = document.getElementById("goldCard");
+        // International Spot to INR with Duty (6%) and GST (3%)
+        const p24 = (g / 31.1035) * r * 1.06 * 1.03;
+        const p22 = p24 * (22/24);
 
-  let title, leftLabel, rightLabel;
-  let leftPrice, rightPrice;
-  let noteText = "";
+        const f = (n) => "₹" + Math.round(n).toLocaleString('en-IN');
+        document.getElementById('v24_1').innerText = f(p24);
+        document.getElementById('v24_8').innerText = f(p24 * 8);
+        document.getElementById('v22_1').innerText = f(p22);
+        document.getElementById('v22_8').innerText = f(p22 * 8);
 
-  // 🕚 11:45 PM Logic
-  if (minutes >= 1425) {
-    title = "Today vs Tomorrow (Opening)";
-    const today = new Date(now);
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    leftLabel = `Today (${formatDate(today)})`;
-    rightLabel = `Tomorrow (${formatDate(tomorrow)})`;
-
-    leftPrice = await fetchLatestGold();
-    rightPrice = leftPrice; // Opening indication
-
-    noteText = "Checked at 11:45 PM – pre-opening suggestion";
-
-  }
-  // 🌅 8:45 AM Logic
-  else if (minutes >= 525) {
-    title = "Yesterday vs Today";
-    const yesterday = new Date(now);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    leftLabel = `Yesterday (${formatDate(yesterday)})`;
-    rightLabel = `Today (${formatDate(now)})`;
-
-    leftPrice = await fetchHistoricalGold(formatDate(yesterday));
-    rightPrice = await fetchLatestGold();
-
-    noteText = "Checked after 8:45 AM – market confirmation";
-  }
-  else {
-    card.innerHTML = `<div class="title">Check after 8:45 AM or 11:45 PM</div>`;
-    return;
-  }
-
-  const diff = rightPrice - leftPrice;
-  const arrow = diff > 0 ? "▲" : diff < 0 ? "▼" : "—";
-  const cls = diff > 0 ? "up" : diff < 0 ? "down" : "";
-
-  card.innerHTML = `
-    <div class="title">${title}</div>
-
-    <div class="row">
-      <span>${leftLabel}</span>
-      <span>${leftPrice.toFixed(2)}</span>
-    </div>
-
-    <div class="row">
-      <span>${rightLabel}</span>
-      <span>${rightPrice.toFixed(2)}</span>
-    </div>
-
-    <div class="result ${cls}">
-      ${arrow} ${diff.toFixed(2)}
-    </div>
-
-    <div class="note">${noteText}</div>
-  `;
-}
-
-buildCard();
+        // Update Trend Indicator
+        const trendElem = document.getElementById('trend');
+        const trendVal = document.getElementById('trendVal');
+        const diff = Math.round(p22) - PREVIOUS_CLOSE_22K;
+        
+        if(diff >= 0) {
+            trendElem.className = "trend-indicator up";
+            trendElem.innerHTML = "▲ Up " + f(Math.abs(diff));
+        } else {
+            trendElem.className = "trend-indicator down";
+            trendElem.innerHTML = "▼ Down " + f(Math.abs(diff));
+        }
+    }
+    // Initial Run
+    runCalc();
 </script>
-
 </body>
 </html>
