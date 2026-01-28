@@ -7,21 +7,33 @@
     <style>
         :root { --gold: #D4AF37; --dark: #121212; --card: #1e1e1e; --text: #ffffff; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--dark); color: var(--text); padding: 15px; display: flex; justify-content: center; }
-        .wrapper { width: 100%; max-width: 480px; background: var(--card); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; border: 1px solid #333; }
+        .wrapper { width: 100%; max-width: 450px; background: var(--card); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; border: 1px solid #333; }
         .header { background: var(--gold); padding: 20px; text-align: center; color: #000; }
-        .nav-links { background: #252525; padding: 12px; display: flex; justify-content: space-around; border-bottom: 1px solid #333; }
-        .nav-links a { color: var(--gold); text-decoration: none; font-size: 0.85em; font-weight: bold; border: 1px solid var(--gold); padding: 5px 10px; border-radius: 5px; transition: 0.3s; }
-        .nav-links a:hover { background: var(--gold); color: #000; }
         .content { padding: 20px; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.75em; color: #888; margin-bottom: 5px; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 1.1em; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 10px; font-size: 1em; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .res-card { background: #252525; padding: 12px; border-radius: 10px; border-left: 4px solid var(--gold); }
-        .res-label { font-size: 0.7em; color: #aaa; display: block; }
-        .res-val { font-size: 1.1em; font-weight: bold; margin-top: 3px; }
-        .timing { margin-top: 20px; padding: 12px; background: #252525; border-radius: 8px; font-size: 0.8em; line-height: 1.5; color: #bbb; border: 1px solid #333; }
+        
+        /* New Styled Data Links Section */
+        .source-box { margin-bottom: 25px; display: flex; flex-direction: column; gap: 10px; }
+        .source-link { 
+            display: flex; align-items: center; justify-content: center;
+            background: #2a2a2a; color: var(--gold); text-decoration: none; 
+            padding: 10px; border-radius: 8px; font-size: 0.9em; font-weight: bold;
+            border: 1px solid #444; transition: 0.2s;
+        }
+        .source-link:hover { background: #333; border-color: var(--gold); }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.75em; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 1.1em; box-sizing: border-box; }
+        
+        button { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 8px; font-weight: 800; cursor: pointer; margin-top: 5px; font-size: 1em; text-transform: uppercase; }
+        button:hover { opacity: 0.9; transform: scale(0.98); }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
+        .res-card { background: #252525; padding: 15px; border-radius: 12px; border-left: 4px solid var(--gold); }
+        .res-label { font-size: 0.7em; color: #aaa; display: block; margin-bottom: 5px; }
+        .res-val { font-size: 1.2em; font-weight: bold; }
+        
+        .timing { margin-top: 25px; padding: 15px; background: #252525; border-radius: 10px; font-size: 0.8em; line-height: 1.6; color: #bbb; border: 1px solid #333; }
         .timing b { color: var(--gold); }
     </style>
 </head>
@@ -30,19 +42,20 @@
 <div class="wrapper">
     <div class="header">
         <h2 style="margin:0">CHENNAI GOLD PREDICTOR</h2>
-        <p style="margin:5px 0 0; font-size: 0.8em; font-weight: bold;">Predict Tomorrow's Opening Rate</p>
-    </div>
-
-    <div class="nav-links">
-        <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank">📈 LIVE GOLD CHART</a>
-        <a href="https://www.google.com/finance/quote/USD-INR" target="_blank">💵 USD/INR RATE</a>
+        <p style="margin:5px 0 0; font-size: 0.85em; opacity: 0.8;">Predict Tomorrow's Opening Rate</p>
     </div>
 
     <div class="content">
+        <div class="source-box">
+            <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank" class="source-link">📈 LIVE GOLD CHART (XAU/USD)</a>
+            <a href="https://www.google.com/finance/quote/USD-INR" target="_blank" class="source-link">💵 LIVE USD/INR RATE</a>
+        </div>
+
         <div class="input-group">
             <label>Global Gold (USD/oz)</label>
             <input type="number" id="gold" value="5284.86" step="0.01">
         </div>
+        
         <div class="input-group">
             <label>USD to INR Rate</label>
             <input type="number" id="inr" value="92.11" step="0.01">
@@ -53,7 +66,7 @@
         <div class="grid">
             <div class="res-card"><span class="res-label">24K (1g)</span><div id="v1" class="res-val">--</div></div>
             <div class="res-card"><span class="res-label">24K (8g)</span><div id="v2" class="res-val">--</div></div>
-            <div class="res-card"><span class="res-card"><span class="res-label">22K (1g)</span><div id="v3" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">22K (1g)</span><div id="v3" class="res-val">--</div></div>
             <div class="res-card"><span class="res-label">22K (8g)</span><div id="v4" class="res-val">--</div></div>
         </div>
 
@@ -69,9 +82,13 @@
     function run() {
         const g = parseFloat(document.getElementById('gold').value);
         const r = parseFloat(document.getElementById('inr').value);
-        const p24 = (g / 31.1035) * r * 1.06 * 1.03; // Duty(6%) + GST(3%)
+        
+        // Formula: (Global / 31.1035 * INR) * 1.06 (Import Duty) * 1.03 (GST)
+        const p24 = (g / 31.1035) * r * 1.06 * 1.03; 
         const p22 = p24 * (22/24);
+        
         const f = (n) => "₹" + Math.round(n).toLocaleString('en-IN');
+        
         document.getElementById('v1').innerText = f(p24);
         document.getElementById('v2').innerText = f(p24 * 8);
         document.getElementById('v3').innerText = f(p22);
