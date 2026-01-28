@@ -3,75 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Predictor - Chennai</title>
+    <title>Chennai Gold Predictor</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #1a1a1a; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .header { background: var(--gold); color: white; padding: 20px; text-align: center; }
+        :root { --gold: #D4AF37; --dark-bg: #121212; --card-bg: #1e1e1e; --text: #ffffff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--dark-bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 500px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); overflow: hidden; }
+        .header { background: var(--gold); padding: 25px; text-align: center; color: #000; }
+        .data-sources { background: #2a2a2a; padding: 15px; text-align: center; border-bottom: 1px solid #3d3d3d; }
+        .data-sources a { color: var(--gold); text-decoration: none; font-weight: bold; margin: 0 10px; font-size: 0.9em; border-bottom: 1px dashed var(--gold); }
         .content { padding: 25px; }
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 15px; background: var(--dark); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { background: #333; }
-        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        .result-card { background: #fff9e6; border-left: 5px solid var(--gold); padding: 15px; border-radius: 8px; }
-        .result-val { font-size: 1.2em; font-weight: bold; color: var(--dark); }
-        .advice { background: #e7f3ff; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.85em; }
-        .links a { color: var(--gold); text-decoration: none; font-weight: bold; }
+        .input-box { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.85em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 14px; background: #2a2a2a; border: 1px solid #3d3d3d; border-radius: 8px; color: #fff; font-size: 1.1em; box-sizing: border-box; }
+        button { width: 100%; padding: 16px; background: var(--gold); border: none; border-radius: 8px; color: #000; font-weight: 800; font-size: 1em; cursor: pointer; transition: 0.2s; }
+        button:hover { opacity: 0.9; transform: scale(0.98); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .card { background: #2a2a2a; padding: 15px; border-radius: 10px; border-top: 3px solid var(--gold); }
+        .card-label { font-size: 0.75em; color: #aaa; display: block; }
+        .card-val { font-size: 1.2em; font-weight: bold; margin-top: 5px; color: #fff; }
+        .time-guide { margin-top: 25px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; border: 1px solid var(--gold); font-size: 0.85em; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2 style="margin:0">Chennai Gold Predictor</h2>
-            <p style="margin:5px 0 0">Predict Tomorrow's Opening Rate</p>
-        </div>
-        <div class="content">
-            <div class="input-group">
-                <label>XAU/USD Spot Price (from TradingView):</label>
-                <input type="number" id="globalPrice" value="5284.86" step="0.01">
-            </div>
-            <div class="input-group">
-                <label>USD to INR Rate (from Google):</label>
-                <input type="number" id="usdInr" value="92.11" step="0.01">
-            </div>
-            <button onclick="calculate()">Calculate Predictions</button>
 
-            <div class="results-grid">
-                <div class="result-card"><span>24K (1g)</span><div id="24k1" class="result-val">--</div></div>
-                <div class="result-card"><span>24K (8g)</span><div id="24k8" class="result-val">--</div></div>
-                <div class="result-card"><span>22K (1g)</span><div id="22k1" class="result-val">--</div></div>
-                <div class="result-card"><span>22K (8g)</span><div id="22k8" class="result-val">--</div></div>
-            </div>
-
-            <div class="advice">
-                <strong>💡 Best Times to Check for Accuracy:</strong><br>
-                1. <b>11:45 PM IST:</b> After MCX closes. Captures the initial global "gap".<br>
-                2. <b>8:45 AM IST:</b> Just before Chennai market opens. Captures overnight volatility.
-            </div>
-
-            <div class="links" style="margin-top:20px; font-size:0.8em; text-align:center;">
-                <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank">Live Gold Chart</a> | 
-                <a href="https://www.google.com/finance/quote/USD-INR" target="_blank">Live USD/INR Rate</a>
-            </div>
-        </div>
+<div class="app-container">
+    <div class="header">
+        <h2 style="margin:0">GOLD PREDICTOR</h2>
+        <p style="margin:5px 0 0; opacity:0.8">Chennai Market Outlook</p>
     </div>
 
-    <script>
-        function calculate() {
-            const global = parseFloat(document.getElementById('globalPrice').value);
-            const inr = parseFloat(document.getElementById('usdInr').value);
-            
-            const perGram24K = (global / 31.1035) * inr * 1.06 * 1.03;
-            const perGram22K = perGram24K * (22/24);
+    <div class="data-sources">
+        <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank">1. Live Gold Chart</a>
+        <a href="https://www.google.com/finance/quote/USD-INR" target="_blank">2. USD/INR Rate</a>
+    </div>
 
-            document.getElementById('24k1').innerText = "₹" + Math.round(perGram24K).toLocaleString('en-IN');
-            document.getElementById('24k8').innerText = "₹" + Math.round(perGram24K * 8).toLocaleString('en-IN');
-            document.getElementById('22k1').innerText = "₹" + Math.round(perGram22K).toLocaleString('en-IN');
-            document.getElementById('22k8').innerText = "₹" + Math.round(perGram22K * 8).toLocaleString('en-IN');
-        }
-    </script>
+    <div class="content">
+        <div class="input-box">
+            <label>Global Gold (USD/oz)</label>
+            <input type="number" id="globalPrice" value="5284.86" step="0.01">
+        </div>
+        <div class="input-box">
+            <label>USD to INR Rate</label>
+            <input type="number" id="usdInr" value="92.11" step="0.01">
+        </div>
+
+        <button onclick="calc()">CALCULATE PREDICTION</button>
+
+        <div class="grid">
+            <div class="card"><span class="card-label">24K (1g)</span><div id="24k1" class="card-val">--</div></div>
+            <div class="card"><span class="card-label">24K (8g)</span><div id="24k8" class="card-val">--</div></div>
+            <div class="card"><span class="card-label">22K (1g)</span><div id="22k1" class="card-val">--</div></div>
+            <div class="card"><span class="card-label">22K (8g)</span><div id="22k8" class="card-val">--</div></div>
+        </div>
+
+        <div class="time-guide">
+            <strong>⏰ Accuracy Checkpoints:</strong><br>
+            • <b>11:45 PM IST:</b> Best for overnight forecast.<br>
+            • <b>8:45 AM IST:</b> Final check before market open.
+        </div>
+    </div>
+</div>
+
+<script>
+    function calc() {
+        const global = parseFloat(document.getElementById('globalPrice').value);
+        const inr = parseFloat(document.getElementById('usdInr').value);
+        
+        // Formula: (Global / 31.1035 * INR) * 1.06 (Import Duty) * 1.03 (GST)
+        const base24K = (global / 31.1035) * inr * 1.06 * 1.03;
+        const base22K = base24K * (22/24);
+
+        const format = (val) => "₹" + Math.round(val).toLocaleString('en-IN');
+
+        document.getElementById('24k1').innerText = format(base24K);
+        document.getElementById('24k8').innerText = format(base24K * 8);
+        document.getElementById('22k1').innerText = format(base22K);
+        document.getElementById('22k8').innerText = format(base22K * 8);
+    }
+</script>
+
 </body>
 </html>
