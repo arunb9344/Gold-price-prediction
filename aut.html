@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chennai Gold Predictor (Automated)</title>
+    <style>
+        :root { --gold: #D4AF37; --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); padding: 15px; display: flex; justify-content: center; }
+        .wrapper { width: 100%; max-width: 450px; background: var(--card); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; overflow: hidden; }
+        .header { background: var(--gold); padding: 20px; text-align: center; color: #000; }
+        .content { padding: 20px; }
+        .source-box { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .source-link { background: #2a2a2a; color: var(--gold); text-decoration: none; padding: 10px; border-radius: 8px; font-size: 0.85em; text-align: center; border: 1px solid #444; font-weight: bold; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.7em; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: white; font-size: 1.1em; box-sizing: border-box; }
+        .btn-auto { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; color: #000; transition: 0.3s; }
+        .btn-auto:hover { opacity: 0.9; transform: scale(0.98); }
+        .btn-manual { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 8px; cursor: pointer; font-size: 0.9em; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .res-card { background: #252525; padding: 12px; border-radius: 10px; border-left: 4px solid var(--gold); }
+        .res-val { font-size: 1.1em; font-weight: bold; margin-top: 3px; }
+        .status { font-size: 0.75em; text-align: center; margin-top: 10px; color: #aaa; }
+        .timing { margin-top: 20px; padding: 12px; background: #252525; border-radius: 8px; font-size: 0.8em; line-height: 1.5; color: #bbb; border: 1px solid #333; }
+        .timing b { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header">
+        <h2 style="margin:0">GOLD PREDICTOR</h2>
+        <p style="margin:5px 0 0; font-size: 0.8em; font-weight: bold;">Chennai Market Prediction</p>
+    </div>
+
+    <div class="content">
+        <div class="source-box">
+            <a href="https://in.tradingview.com/symbols/XAUUSD/" target="_blank" class="source-link">📈 LIVE GOLD CHART (Source)</a>
+            <a href="https://www.google.com/finance/quote/USD-INR" target="_blank" class="source-link">💵 LIVE USD/INR RATE (Source)</a>
+        </div>
+
+        <input type="hidden" id="apiKey" value="1e9919c6199d6834c01fdb64e2af9cee">
+
+        <button class="btn-auto" onclick="fetchData()">⚡ AUTO-FETCH LIVE RATES</button>
+        
+        <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+
+        <div class="input-group">
+            <label>Global Gold (USD/oz)</label>
+            <input type="number" id="gold" step="0.01" placeholder="Fetching...">
+        </div>
+        <div class="input-group">
+            <label>USD to INR Rate</label>
+            <input type="number" id="inr" step="0.01" placeholder="Fetching...">
+        </div>
+        <button class="btn-manual" onclick="runCalc()">MANUAL CALCULATE</button>
+
+        <div class="grid">
+            <div class="res-card"><span style="font-size:0.7em">24K (1g)</span><div id="v1" class="res-val">--</div></div>
+            <div class="res-card"><span style="font-size:0.7em">24K (8g)</span><div id="v2" class="res-val">--</div></div>
+            <div class="res-card"><span style="font-size:0.7em">22K (1g)</span><div id="v3" class="res-val">--</div></div>
+            <div class="res-card"><span style="font-size:0.7em">22K (8g)</span><div id="v4" class="res-val">--</div></div>
+        </div>
+
+        <div id="status" class="status">Waiting for data...</div>
+
+        <div class="timing">
+            <strong>⏰ ACCURACY TIMES:</strong><br>
+            • Check at <b>11:45 PM IST</b> (After MCX Closes)<br>
+            • Check at <b>08:45 AM IST</b> (Before Chennai Opens)
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchData() {
+        const key = document.getElementById('apiKey').value;
+        const status = document.getElementById('status');
+        
+        status.innerText = "Connecting to market servers...";
+        try {
+            // Fetching USD base to get XAU (Gold) and INR in one call
+            const url = `https://api.metalpriceapi.com/v1/latest?api_key=${key}&base=USD&currencies=XAU,INR`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            
+            if(data.success) {
+                // MetalpriceAPI provides the reciprocal for metals (1 USD = X ounces)
+                const goldPrice = 1 / data.rates.XAU; 
+                const inrRate = data.rates.INR;
+
+                document.getElementById('gold').value = goldPrice.toFixed(2);
+                document.getElementById('inr').value = inrRate.toFixed(2);
+                
+                runCalc();
+                status.innerHTML = "✅ Live Data Updated: " + new Date().toLocaleTimeString();
+            } else {
+                status.innerText = "❌ API Error. Limit likely exceeded. Please enter manually.";
+            }
+        } catch (e) {
+            status.innerText = "❌ Connection failed. Use manual entry below.";
+        }
+    }
+
+    function runCalc() {
+        const g = parseFloat(document.getElementById('gold').value);
+        const r = parseFloat(document.getElementById('inr').value);
+        if(!g || !r) return;
+
+        // Prediction Formula: (Global / 31.1035 * INR) * 1.06 (Duty) * 1.03 (GST)
+        const p24 = (g / 31.1035) * r * 1.06 * 1.03; 
+        const p22 = p24 * (22/24);
+        
+        const f = (n) => "₹" + Math.round(n).toLocaleString('en-IN');
+        document.getElementById('v1').innerText = f(p24);
+        document.getElementById('v2').innerText = f(p24 * 8);
+        document.getElementById('v3').innerText = f(p22);
+        document.getElementById('v4').innerText = f(p22 * 8);
+    }
+</script>
+</body>
+</html>
