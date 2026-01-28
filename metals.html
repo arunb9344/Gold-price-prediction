@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chennai Gold Predictor (Automated)</title>
+    <title>Chennai Gold Predictor (Final Corrected)</title>
     <style>
         :root { --gold: #D4AF37; --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); padding: 15px; display: flex; justify-content: center; }
@@ -32,7 +32,7 @@
 <div class="wrapper">
     <div class="header">
         <h2 style="margin:0">GOLD PREDICTOR</h2>
-        <p style="margin:5px 0 0; font-size: 0.85em; opacity: 0.8;">Powered by Metals.dev (Live)</p>
+        <p style="margin:5px 0 0; font-size: 0.85em; opacity: 0.8;">Metals.dev Real-Time Engine</p>
     </div>
 
     <div class="content">
@@ -81,14 +81,16 @@
         
         status.innerText = "Connecting to market servers...";
         try {
-            // Corrected URL: Use currency=USD to get standard spot prices
-            const url = `https://api.metals.dev/v1/latest?api_key=${key}&currency=USD&unit=toz`;
+            // API documentation: Default is USD. Unit is toz (Troy Ounce).
+            const url = `https://api.metals.dev/v1/latest?api_key=${key}`;
             const resp = await fetch(url);
             const data = await resp.json();
             
             if(data.status === "success") {
-                // Get standard USD Gold price and USD/INR rate separately
+                // Correctly pull global gold price in USD/oz
                 const goldUSD = data.metals.gold; 
+                
+                // Metals.dev returns 1 USD = X INR on USD base
                 const inrRate = data.currencies.INR;
 
                 document.getElementById('gold').value = goldUSD.toFixed(2);
@@ -100,7 +102,7 @@
                 status.innerText = "❌ API Error. Limit likely reached.";
             }
         } catch (e) {
-            status.innerText = "❌ Connection failed. Use manual entry.";
+            status.innerText = "❌ Connection failed. Check manual links.";
         }
     }
 
@@ -109,7 +111,7 @@
         const r = parseFloat(document.getElementById('inr').value);
         if(!g || !r) return;
 
-        // Prediction Formula: (Global / 31.1035 * INR) * 1.06 (Duty) * 1.03 (GST)
+        // Formula: (Global / 31.1035 * INR) * 1.06 (Duty) * 1.03 (GST)
         const p24 = (g / 31.1035) * r * 1.06 * 1.03; 
         const p22 = p24 * (22/24);
         
