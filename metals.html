@@ -1,284 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chennai Gold Predictor – PRO</title>
-
-<style>
-:root{
-    --gold:#D4AF37;
-    --bg:#121212;
-    --card:#1e1e1e;
-    --text:#fff;
-}
-body{
-    margin:0;
-    padding:15px;
-    background:var(--bg);
-    color:var(--text);
-    font-family:Segoe UI,Arial,sans-serif;
-    display:flex;
-    justify-content:center;
-}
-.wrapper{
-    width:100%;
-    max-width:460px;
-    background:var(--card);
-    border-radius:20px;
-    border:1px solid #333;
-    box-shadow:0 10px 30px rgba(0,0,0,.6);
-    overflow:hidden;
-}
-.header{
-    background:var(--gold);
-    color:#000;
-    text-align:center;
-    padding:20px;
-}
-.header h2{margin:0}
-.header p{margin:6px 0 0;font-size:.85em;opacity:.8}
-
-.content{padding:20px}
-
-.input-group{margin-bottom:15px}
-.input-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-label{
-    font-size:.7em;
-    color:#aaa;
-    text-transform:uppercase;
-}
-.source-mini{
-    font-size:.7em;
-    color:var(--gold);
-    text-decoration:none;
-    opacity:.85;
-}
-input{
-    width:100%;
-    margin-top:6px;
-    padding:12px;
-    font-size:1.1em;
-    background:#2a2a2a;
-    color:#fff;
-    border:1px solid #444;
-    border-radius:8px;
-}
-
-.action-row{
-    display:flex;
-    gap:10px;
-    margin-top:5px;
-}
-.btn-auto{
-    flex:1;
-    padding:14px;
-    background:var(--gold);
-    color:#000;
-    font-weight:bold;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-}
-.btn-manual{
-    flex:1;
-    padding:14px;
-    background:transparent;
-    color:var(--gold);
-    border:1px solid var(--gold);
-    border-radius:8px;
-    cursor:pointer;
-}
-
-.grid{
-    margin-top:20px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-.res-card{
-    background:#252525;
-    padding:15px;
-    border-radius:12px;
-    border-left:4px solid var(--gold);
-}
-.res-label{
-    font-size:.7em;
-    color:#aaa;
-}
-.res-val{
-    font-size:1.2em;
-    font-weight:bold;
-}
-
-.compare-box{
-    margin-top:20px;
-    background:#252525;
-    padding:15px;
-    border-radius:12px;
-    border:1px solid #333;
-}
-.trend{
-    margin-top:6px;
-    font-size:1.2em;
-    font-weight:bold;
-}
-.up{color:#4caf50}
-.down{color:#f44336}
-.flat{color:#aaa}
-
-.status{
-    text-align:center;
-    font-size:.75em;
-    color:#aaa;
-    margin-top:12px;
-}
-
-.timing{
-    margin-top:18px;
-    padding:12px;
-    background:#252525;
-    border-radius:10px;
-    font-size:.8em;
-    line-height:1.6;
-    color:#bbb;
-    border:1px solid #333;
-}
-.timing b{color:var(--gold)}
-</style>
+  <meta charset="UTF-8">
+  <title>Gold Today vs Tomorrow</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    .card {
+      max-width: 420px;
+      margin: auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 15px;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .up { color: green; }
+    .down { color: red; }
+    .note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
 </head>
-
 <body>
-<div class="wrapper">
-<div class="header">
-    <h2>CHENNAI GOLD PREDICTOR</h2>
-    <p>Metals.dev Precision Reference</p>
-</div>
 
-<div class="content">
-
-<input type="hidden" id="apiKey" value="QPVMXLS7RX51HTMA34LI843MA34LI">
-
-<div class="input-group">
-    <div class="input-header">
-        <label>Global Gold (USD / oz)</label>
-        <a class="source-mini" target="_blank"
-           href="https://in.tradingview.com/symbols/XAUUSD/">Source ↗</a>
-    </div>
-    <input type="number" id="gold" placeholder="Fetching...">
-</div>
-
-<div class="input-group">
-    <div class="input-header">
-        <label>USD → INR Rate</label>
-        <a class="source-mini" target="_blank"
-           href="https://www.google.com/finance/quote/USD-INR">Source ↗</a>
-    </div>
-    <input type="number" id="inr" placeholder="Fetching...">
-</div>
-
-<div class="action-row">
-    <button class="btn-auto" onclick="fetchData()">⚡ AUTO FETCH</button>
-    <button class="btn-manual" onclick="runCalc()">CALCULATE</button>
-</div>
-
-<div class="grid">
-    <div class="res-card">
-        <span class="res-label">24K – 1g</span>
-        <div id="v1" class="res-val">--</div>
-    </div>
-    <div class="res-card">
-        <span class="res-label">24K – 8g</span>
-        <div id="v2" class="res-val">--</div>
-    </div>
-    <div class="res-card">
-        <span class="res-label">22K – 1g ⭐</span>
-        <div id="v3" class="res-val">--</div>
-    </div>
-    <div class="res-card">
-        <span class="res-label">22K – 8g</span>
-        <div id="v4" class="res-val">--</div>
-    </div>
-</div>
-
-<div class="compare-box">
-    <span class="res-label">Today vs Tomorrow (22K – 1g)</span>
-    <div id="compare" class="trend">--</div>
-    <small style="color:#888;font-size:.7em">
-        Indicative trend based on global movement
-    </small>
-</div>
-
-<div id="status" class="status">Waiting for update…</div>
-
-<div class="timing">
-    <b>Best Accuracy Times</b><br>
-    • 11:45 PM IST (After MCX Close)<br>
-    • 08:45 AM IST (Before Chennai Market Opens)
-</div>
-
-</div>
+<div class="card" id="goldCard">
+  <div class="title">Loading...</div>
 </div>
 
 <script>
-async function fetchData(){
-    const key=document.getElementById("apiKey").value;
-    const status=document.getElementById("status");
-    status.innerText="Fetching live market data…";
+const API_KEY = "YOUR_METALS_DEV_API_KEY";
+const BASE_URL = "https://api.metals.dev/v1";
 
-    try{
-        const url=`https://api.metals.dev/v1/latest?api_key=${key}&currency=USD&unit=toz`;
-        const r=await fetch(url);
-        const d=await r.json();
-
-        if(d.status==="success"){
-            let inr=d.currencies.INR;
-            if(inr<1) inr=1/inr;
-
-            document.getElementById("gold").value=d.metals.gold.toFixed(2);
-            document.getElementById("inr").value=inr.toFixed(2);
-
-            runCalc();
-            status.innerText="✅ Updated: "+new Date().toLocaleTimeString();
-        }else{
-            status.innerText="❌ API limit reached";
-        }
-    }catch{
-        status.innerText="❌ Connection failed";
-    }
+async function fetchLatestGold() {
+  const res = await fetch(`${BASE_URL}/latest?api_key=${API_KEY}&symbols=XAU`);
+  const data = await res.json();
+  return data.rates.XAU;
 }
 
-function runCalc(){
-    const g=parseFloat(gold.value);
-    const r=parseFloat(inr.value);
-    if(!g||!r) return;
-
-    const p24=(g/31.1035)*r*1.06*1.03;
-    const p22=p24*(22/24);
-    const f=n=>"₹"+Math.round(n).toLocaleString("en-IN");
-
-    v1.innerText=f(p24);
-    v2.innerText=f(p24*8);
-    v3.innerText=f(p22);
-    v4.innerText=f(p22*8);
-
-    const swing=(Math.random()*0.003+0.004);
-    const dir=Math.random();
-    let html="";
-
-    if(dir>0.6){
-        html=`🔺 Up <span class="up">${f(p22*(1+swing))}</span>`;
-    }else if(dir<0.4){
-        html=`🔻 Down <span class="down">${f(p22*(1-swing))}</span>`;
-    }else{
-        html=`➖ Flat <span class="flat">${f(p22)}</span>`;
-    }
-    compare.innerHTML=html;
+async function fetchHistoricalGold(date) {
+  const res = await fetch(
+    `${BASE_URL}/historical?api_key=${API_KEY}&symbols=XAU&date=${date}`
+  );
+  const data = await res.json();
+  return data.rates.XAU;
 }
+
+function formatDate(d) {
+  return d.toISOString().split("T")[0];
+}
+
+async function buildCard() {
+  const now = new Date();
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  const card = document.getElementById("goldCard");
+
+  let title, leftLabel, rightLabel;
+  let leftPrice, rightPrice;
+  let noteText = "";
+
+  // 🕚 11:45 PM Logic
+  if (minutes >= 1425) {
+    title = "Today vs Tomorrow (Opening)";
+    const today = new Date(now);
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    leftLabel = `Today (${formatDate(today)})`;
+    rightLabel = `Tomorrow (${formatDate(tomorrow)})`;
+
+    leftPrice = await fetchLatestGold();
+    rightPrice = leftPrice; // Opening indication
+
+    noteText = "Checked at 11:45 PM – pre-opening suggestion";
+
+  }
+  // 🌅 8:45 AM Logic
+  else if (minutes >= 525) {
+    title = "Yesterday vs Today";
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    leftLabel = `Yesterday (${formatDate(yesterday)})`;
+    rightLabel = `Today (${formatDate(now)})`;
+
+    leftPrice = await fetchHistoricalGold(formatDate(yesterday));
+    rightPrice = await fetchLatestGold();
+
+    noteText = "Checked after 8:45 AM – market confirmation";
+  }
+  else {
+    card.innerHTML = `<div class="title">Check after 8:45 AM or 11:45 PM</div>`;
+    return;
+  }
+
+  const diff = rightPrice - leftPrice;
+  const arrow = diff > 0 ? "▲" : diff < 0 ? "▼" : "—";
+  const cls = diff > 0 ? "up" : diff < 0 ? "down" : "";
+
+  card.innerHTML = `
+    <div class="title">${title}</div>
+
+    <div class="row">
+      <span>${leftLabel}</span>
+      <span>${leftPrice.toFixed(2)}</span>
+    </div>
+
+    <div class="row">
+      <span>${rightLabel}</span>
+      <span>${rightPrice.toFixed(2)}</span>
+    </div>
+
+    <div class="result ${cls}">
+      ${arrow} ${diff.toFixed(2)}
+    </div>
+
+    <div class="note">${noteText}</div>
+  `;
+}
+
+buildCard();
 </script>
 
 </body>
