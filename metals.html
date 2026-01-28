@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chennai Gold Predictor (Metals.dev)</title>
+    <title>Chennai Gold Predictor (Automated)</title>
     <style>
         :root { --gold: #D4AF37; --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); padding: 15px; display: flex; justify-content: center; }
@@ -19,10 +19,11 @@
         .btn-auto:hover { opacity: 0.9; transform: scale(0.98); }
         .btn-manual { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--gold); color: var(--gold); border-radius: 8px; cursor: pointer; font-size: 0.9em; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .res-card { background: #252525; padding: 12px; border-radius: 10px; border-left: 4px solid var(--gold); }
-        .res-val { font-size: 1.1em; font-weight: bold; margin-top: 3px; }
+        .res-card { background: #252525; padding: 15px; border-radius: 12px; border-left: 4px solid var(--gold); }
+        .res-label { font-size: 0.7em; color: #aaa; display: block; margin-bottom: 5px; }
+        .res-val { font-size: 1.2em; font-weight: bold; }
         .status { font-size: 0.75em; text-align: center; margin-top: 10px; color: #aaa; }
-        .timing { margin-top: 20px; padding: 12px; background: #252525; border-radius: 8px; font-size: 0.8em; line-height: 1.5; color: #bbb; border: 1px solid #333; }
+        .timing { margin-top: 20px; padding: 12px; background: #252525; border-radius: 10px; font-size: 0.8em; line-height: 1.6; color: #bbb; border: 1px solid #333; }
         .timing b { color: var(--gold); }
     </style>
 </head>
@@ -31,7 +32,7 @@
 <div class="wrapper">
     <div class="header">
         <h2 style="margin:0">GOLD PREDICTOR</h2>
-        <p style="margin:5px 0 0; font-size: 0.8em; font-weight: bold;">Powered by Metals.dev (60s Delay)</p>
+        <p style="margin:5px 0 0; font-size: 0.85em; opacity: 0.8;">Powered by Metals.dev (Live)</p>
     </div>
 
     <div class="content">
@@ -42,28 +43,28 @@
 
         <input type="hidden" id="apiKey" value="QPVMXLS7RX51HTMA34LI843MA34LI">
 
-        <button class="btn-auto" onclick="fetchData()">⚡ AUTO-FETCH (60s LIVE DATA)</button>
+        <button class="btn-auto" onclick="fetchData()">⚡ AUTO-FETCH LIVE MARKET DATA</button>
         
         <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
 
         <div class="input-group">
             <label>Global Gold (USD/oz)</label>
-            <input type="number" id="gold" step="0.01" placeholder="Manual Override">
+            <input type="number" id="gold" step="0.01" placeholder="Fetching...">
         </div>
         <div class="input-group">
             <label>USD to INR Rate</label>
-            <input type="number" id="inr" step="0.01" placeholder="Manual Override">
+            <input type="number" id="inr" step="0.01" placeholder="Fetching...">
         </div>
         <button class="btn-manual" onclick="runCalc()">MANUAL CALCULATE</button>
 
         <div class="grid">
-            <div class="res-card"><span style="font-size:0.7em">24K (1g)</span><div id="v1" class="res-val">--</div></div>
-            <div class="res-card"><span style="font-size:0.7em">24K (8g)</span><div id="v2" class="res-val">--</div></div>
-            <div class="res-card"><span style="font-size:0.7em">22K (1g)</span><div id="v3" class="res-val">--</div></div>
-            <div class="res-card"><span style="font-size:0.7em">22K (8g)</span><div id="v4" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">24K (1g)</span><div id="v1" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">24K (8g)</span><div id="v2" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">22K (1g)</span><div id="v3" class="res-val">--</div></div>
+            <div class="res-card"><span class="res-label">22K (8g)</span><div id="v4" class="res-val">--</div></div>
         </div>
 
-        <div id="status" class="status">Waiting for input...</div>
+        <div id="status" class="status">Waiting for data...</div>
 
         <div class="timing">
             <strong>⏰ ACCURACY TIMES:</strong><br>
@@ -78,19 +79,16 @@
         const key = document.getElementById('apiKey').value;
         const status = document.getElementById('status');
         
-        status.innerText = "Fetching real-time data from Metals.dev...";
+        status.innerText = "Connecting to market servers...";
         try {
-            // Fetching USD as base to get XAU and INR from Metals.dev
-            const url = `https://api.metals.dev/v1/latest?api_key=${key}&currency=INR&unit=toz`;
+            // Corrected URL: Use currency=USD to get standard spot prices
+            const url = `https://api.metals.dev/v1/latest?api_key=${key}&currency=USD&unit=toz`;
             const resp = await fetch(url);
             const data = await resp.json();
             
             if(data.status === "success") {
-                // Metals.dev returns Gold in USD/oz and USD/INR rate in 'currencies'
-                // Note: On currency=INR request, data.metals.gold is already converted to INR.
-                // To keep the app formula consistent, we use the USD values.
-                
-                const goldUSD = data.metals.gold; // Metals.dev returns USD price by default
+                // Get standard USD Gold price and USD/INR rate separately
+                const goldUSD = data.metals.gold; 
                 const inrRate = data.currencies.INR;
 
                 document.getElementById('gold').value = goldUSD.toFixed(2);
@@ -99,10 +97,10 @@
                 runCalc();
                 status.innerHTML = "✅ Updated: " + new Date().toLocaleTimeString();
             } else {
-                status.innerText = "❌ API Error. Check if your 100-request limit is reached.";
+                status.innerText = "❌ API Error. Limit likely reached.";
             }
         } catch (e) {
-            status.innerText = "❌ Connection failed. Please check your internet.";
+            status.innerText = "❌ Connection failed. Use manual entry.";
         }
     }
 
@@ -111,7 +109,7 @@
         const r = parseFloat(document.getElementById('inr').value);
         if(!g || !r) return;
 
-        // Formula: (Global / 31.1035 * INR) * 1.06 (Duty) * 1.03 (GST)
+        // Prediction Formula: (Global / 31.1035 * INR) * 1.06 (Duty) * 1.03 (GST)
         const p24 = (g / 31.1035) * r * 1.06 * 1.03; 
         const p22 = p24 * (22/24);
         
